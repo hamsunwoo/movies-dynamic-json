@@ -1,12 +1,15 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import explode, col, size, explode_outer
 from pyspark.sql.types import StructType, ArrayType
-
+import sys
 
 # Spark 세션 시작
 spark = SparkSession.builder.appName("parsing").getOrCreate()
+logFile = "/Users/seon-u/app/spark-3.5.1-bin-hadoop3/README.md"  # Should be some file on your system
+logData = spark.read.text(logFile).cache()
 
-year = sys.args[1]
+
+year = sys.argv[1]
 
 
 # pyspark 에서 multiline(배열) 구조 데이터 읽기
@@ -47,13 +50,14 @@ eedf = edf.withColumn("director",  explode_outer("directors"))
 #eedf의 schema 모두 출력
 filter_tool=get_json_keys(eedf.schema,"")
 
-#필요없는 컬럼 삭제
+#필요없는 중복 컬럼 삭제
 filter_tool.remove('companys.companyCd')
 filter_tool.remove('directors.peopleNm')
+filter_tool.remove('companys.companyNm')
 table = eedf.select(*filter_tool)
 
 
 #parquet 으로 저장
-table.write.mode("overwrite").parquet(f"/Users/seon-u/data/movies/parquet/movie_list.parquet")
+table.write.mode("append").parquet(f"/Users/seon-u/data/movies_pagelimit/parquet/year={year}")
 
 spark.stop()

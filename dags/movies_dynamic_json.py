@@ -59,6 +59,9 @@ with DAG(
             task_id='parsing.parquet',
             bash_command="""
                 echo "parsing.parquet"
+                SPARK_HOME=/Users/seon-u/app/spark-3.5.1-bin-hadoop3
+                FILE_PATH=/Users/seon-u/code/movies_json/py
+                $SPARK_HOME/bin/spark-submit $FILE_PATH/parsing_parquet.py {{logical_date.strftime('%Y')}}
             """
             )
 
@@ -66,6 +69,9 @@ with DAG(
             task_id='select.parquet',
             bash_command="""
                 echo "select.parquet"
+                SPARK_HOME=/Users/seon-u/app/spark-3.5.1-bin-hadoop3
+                FILE_PATH=/Users/seon-u/code/movies_json/py
+                $SPARK_HOME/bin/spark-submit $FILE_PATH/select_parquet.py {{logical_date.strftime('%Y')}}
             """
             )
 

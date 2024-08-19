@@ -51,20 +51,9 @@ filter_tool=get_json_keys(eedf.schema,"")
 filter_tool.remove('companys.companyCd')
 filter_tool.remove('directors.peopleNm')
 table = eedf.select(*filter_tool)
-table.show()
 
-#테이블 생성
-table.createOrReplaceTempView("pars")
 
-#sql을 이용하여 집계
-parsing = spark.sql("""
-                    SELECT
-                        peopleNm,
-                        count(distinct peopleNm) as count
-                    FROM pars
-                    GROUP BY peopleNm
-                    """)
-
-parsing.show()
+#parquet 으로 저장
+table.write.mode("overwrite").parquet(f"/Users/seon-u/data/movies/parquet/movie_list.parquet")
 
 spark.stop()

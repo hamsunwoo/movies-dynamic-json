@@ -38,8 +38,25 @@ with DAG(
     start = EmptyOperator(task_id='start')
     end = EmptyOperator(task_id='end')
     
-    get_data = EmptyOperator(task_id='get.data')
-    parsing_parquet = EmptyOperator(task_id='parsing.parquet')
-    select_parquet = EmptyOperator(task_id='select.parquet')
+    get_data = BashOperator(
+            task_id='get.data',
+            bash_command="""
+                echo "get.data"
+            """
+            )
+
+    parsing_parquet = BashOperator(
+            task_id='parsing.parquet',
+            bash_command="""
+                echo "parsing.parquet"
+            """
+            )
+
+    select_parquet = BashOperator(
+            task_id='select.parquet',
+            bash_command="""
+                echo "select.parquet"
+            """
+            )
 
     start >> get_data >> parsing_parquet >> select_parquet >> end

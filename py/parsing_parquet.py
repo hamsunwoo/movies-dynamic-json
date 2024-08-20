@@ -58,6 +58,6 @@ table = eedf.select(*filter_tool)
 
 
 #parquet 으로 저장
-table.write.mode("append").parquet(f"/Users/seon-u/data/movies_pagelimit/parquet/year={year}")
+table.write.mode("overwrite").parquet(f"/Users/seon-u/data/parquet/year={year}")
 
 spark.stop()
